@@ -23,29 +23,34 @@ app.get('/', (req, res) => {
 });
 
 app.get('/weather.txt', (req, res) => {
-  const zipcode = req.query.zipcode;
-  // TODO: Get the weather for this zipcode and return the forecast if available.
-  // If not, return the default forecast.
+  const zipcode = req.query.zipcode
+  const weather = WEATHER[zipcode]
+  if (weather) {
+    res.send(weather.forecast)
+  }
+  else {
+    res.send(DEFAULT_FORECAST)
+  }
 })
 
 app.post('/order-cookies.json', (req, res) => {
-  const cookieType = req.body.cookieType;
-  const qty = Number(req.body.qty);
+  const cookieType = req.body.cookieType
+  const qty = Number(req.body.qty)
 
-  let message;
-  let resultCode = "OK";
+  let message
+  let resultCode = "OK"
   if (qty > 36) {
-    message = "Sorry, there is a limit of 3 dozen cookies.";
-    resultCode = "ERROR";
+    message = "Sorry, there is a limit of 3 dozen cookies."
+    resultCode = "ERROR"
   }
   else if (qty < 1) {
-    message = "Invalid quantity.";
-    resultCode = "ERROR";
+    message = "Invalid quantity."
+    resultCode = "ERROR"
   }
   else {
     message = `Your order of ${qty} ${cookieType} cookies has been confirmed.`
   }
-  res.json({resultCode: resultCode, message: message});
+  res.json({resultCode: resultCode, message: message})
 })
 
 ViteExpress.listen(app, port, () => console.log(`Server running on http://localhost:${port}`));
